@@ -275,21 +275,21 @@ def write_results(model_name, normal_class, model, df, ref_vecs,num_ref_eval, nu
     for f in os.listdir('./outputs/models/class_'+str(normal_class) + '/'):
       if (model_name in f) :
           os.remove(f'./outputs/models/class_'+str(normal_class) + '/{}'.format(f))
-    torch.save(model.state_dict(), './outputs/models/class_'+str(normal_class)+'/' + model_name_temp)
+    torch.save(model.state_dict(), './outputs/models/class_'+str(normal_class)+'/' + model_name_temp+'.pth')
 
 
     for f in os.listdir('./outputs/ED/class_'+str(normal_class) + '/'):
       if (model_name in f) :
           os.remove(f'./outputs/ED/class_'+str(normal_class) + '/{}'.format(f))
-    df.to_csv('./outputs/ED/class_'+str(normal_class)+'/' +model_name_temp)
+    df.to_csv('./outputs/ED/class_'+str(normal_class)+'/' +model_name_temp+'.csv')
 
     for f in os.listdir('./outputs/ref_vec/class_'+str(normal_class) + '/'):
       if (model_name in f) :
         os.remove(f'./outputs/ref_vec/class_'+str(normal_class) + '/{}'.format(f))
-    ref_vecs.to_csv('./outputs/ref_vec/class_'+str(normal_class) + '/' +model_name_temp)
+    ref_vecs.to_csv('./outputs/ref_vec/class_'+str(normal_class) + '/' +model_name_temp+'.csv')
 
 
-    pd.DataFrame([np.mean(inf_times), np.std(inf_times), np.mean(total_times), np.std(total_times), val_auc_min ,f1,acc]).to_csv('./outputs/inference_times/class_'+str(normal_class)+'/'+model_name_temp)
+    pd.DataFrame([np.mean(inf_times), np.std(inf_times), np.mean(total_times), np.std(total_times), val_auc_min ,f1,acc]).to_csv('./outputs/inference_times/class_'+str(normal_class)+'/'+model_name_temp+'.csv')
 
      #write out all details of model training
     cols = ['normal_class', 'ref_seed', 'weight_seed', 'num_ref_eval', 'num_ref_dist','alpha', 'lr', 'weight_decay', 'vector_size','biases', 'smart_samp', 'k', 'v', 'contam' , 'AUC', 'epoch', 'auc_min','training_time', 'f1','acc']
@@ -297,8 +297,8 @@ def write_results(model_name, normal_class, model, df, ref_vecs,num_ref_eval, nu
     string = './outputs/class_' + str(normal_class)
     if not os.path.exists(string):
         os.makedirs(string)
-    pd.DataFrame([params], columns = cols).to_csv('./outputs/class_'+str(normal_class)+'/'+model_name)
-    pd.DataFrame(train_losses).to_csv('./outputs/losses/class_'+str(normal_class)+'/'+model_name)
+    pd.DataFrame([params], columns = cols).to_csv('./outputs/class_'+str(normal_class)+'/'+model_name+'.csv')
+    pd.DataFrame(train_losses).to_csv('./outputs/losses/class_'+str(normal_class)+'/'+model_name+'.csv')
 
 
 def init_feat_vec(model,base_ind, train_dataset, device ):
@@ -414,7 +414,7 @@ if __name__ == '__main__':
     if args.task != 'train':
         val_dataset = load_dataset(args.dataset, indexes,  args.normal_class, 'test', args.data_path, download_data=False)
     else:
-        val_dataset = load_dataset(args.dataset, indexes, args.normal_class, 'validate', args.data_path, download_data=False)
+        val_dataset = load_dataset(args.dataset, indexes, args.normal_class, 'test', args.data_path, download_data=False)
 
 
 
